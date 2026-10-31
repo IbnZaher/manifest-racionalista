@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Манифест рационалиста</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri&text=%EF%B7%BA" rel="stylesheet">
+<style>
+:root {
+  /* Layout idea: the cover's thirteen vertical lines are the spine — hero lines and the top ruler both navigate the thirteen theses. */
+  --paper: #ECE2CD;
+  --paper-deep: #E3D6BC;
+  --ink: #2E2218;
+  --line: #9E886D;
+  --accent: #98602A;
+  --muted: #6F5338;
+  --faint: #CFC1A6;
+  --bordo: #761C24;
+  --display: "Cormorant Garamond", "Amiri", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gut: clamp(16px, 5vw, 96px);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--display); font-weight: 500; font-size: clamp(19px, 1.35vw, 23px); line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+body::before { /* paper grain */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+  background-image: radial-gradient(rgba(80,60,30,.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+main, header.bar, footer { position: relative; z-index: 1; }
+a { color: inherit; }
+.mono { font-family: var(--mono); font-weight: 400; text-transform: uppercase; letter-spacing: .22em; font-size: 12px; }
+.small { font-size: 11px; letter-spacing: .18em; }
+.accent { color: var(--accent); }
+.bordo { color: var(--bordo); }
+.center { text-align: center; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- top bar ---------- */
+header.bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10; height: 64px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
+  padding: 0 var(--gut); background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px); border-bottom: 1px solid color-mix(in srgb, var(--line) 35%, transparent);
+  transform: translateY(-100%); transition: transform .5s cubic-bezier(.2,.7,.2,1);
+}
+header.bar.show { transform: none; }
+.brand { color: var(--muted); text-decoration: none; }
+.ruler { display: flex; justify-content: space-between; max-width: 760px; width: 100%; justify-self: center; }
+.ruler a { display: grid; justify-items: center; gap: 4px; text-decoration: none; width: 36px; color: var(--faint); }
+.ruler a::before { content: ""; width: 2px; height: 22px; background: currentColor; transition: height .3s, background .3s; }
+.ruler a span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; }
+.ruler a.past { color: var(--line); }
+.ruler a.cur { color: var(--accent); }
+.ruler a.cur::before { height: 30px; width: 3px; }
+.ruler a:hover { color: var(--ink); }
+.player { display: flex; align-items: center; gap: 14px; }
+.btn {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+  background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 9px 14px; cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn.on, .btn.play.on { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.ghost-btn { border-color: transparent; color: var(--muted); }
+.time { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; }
+.follow { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.follow input { accent-color: var(--accent); }
+
+/* ---------- hero (the cover) ---------- */
+.hero { padding: 72px var(--gut) 64px; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 40px; }
+.hero-lines { display: flex; gap: 0; height: clamp(220px, 34vh, 380px); }
+.hl {
+  flex: 1 1 0; max-width: 84px; min-width: 18px; position: relative; text-decoration: none;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.hl::before {
+  content: ""; width: 2px; flex: 1; background: var(--line); transform-origin: top;
+  animation: grow 1.2s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 60ms);
+  transition: background .25s, width .25s;
+}
+.hl.thick::before { width: 3px; }
+.hl span { margin-top: 14px; color: var(--muted); font-size: 11px; letter-spacing: .1em; transform: translateX(-35%); }
+.hl:hover::before, .hl:focus-visible::before { background: var(--accent); width: 4px; }
+.hl:hover span { color: var(--accent); }
+@keyframes grow { from { transform: scaleY(.04); } to { transform: scaleY(1); } }
+.hero-title { grid-column: 1; margin: 64px 0 0; font-weight: 500; line-height: .98; font-size: clamp(3.4rem, 10.5vw, 10.5rem); letter-spacing: -.01em; }
+.hero-title .ch { display: block; }
+.hero-caption { grid-column: 1; margin-top: 22px; min-height: 1.6em; color: var(--accent); }
+.xiii { grid-column: 2; grid-row: 1 / span 3; display: flex; flex-direction: column; align-items: center; text-decoration: none; padding-right: 2vw; }
+.xiii::before { content: ""; width: 3px; flex: 1; background: var(--accent); transform-origin: top; animation: grow 1.8s .5s cubic-bezier(.2,.7,.2,1) both; }
+.xiii span { margin-top: 14px; color: var(--accent); font-size: 11px; }
+.xiii:hover::before { width: 5px; }
+.author { grid-column: 1 / -1; margin-top: 56px; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; }
+.author em { font-size: clamp(1.6rem, 2.6vw, 2.4rem); color: var(--muted); font-weight: 500; }
+
+/* ---------- preface ---------- */
+.preface { padding: 120px var(--gut) 80px; display: grid; justify-items: center; text-align: center; gap: 36px; }
+.preface p { margin: 0; max-width: 34ch; font-style: italic; font-size: clamp(1.5rem, 2.4vw, 2.2rem); line-height: 1.45; text-wrap: balance; }
+.preface p.sum { font-style: normal; max-width: 30ch; }
+.rule-mini { width: 80px; height: 2px; background: var(--accent); }
+.warning {
+  margin: 40px var(--gut) 40px; padding: 8px 0 8px 36px; border-left: 3px solid var(--accent);
+  max-width: 900px; justify-self: center;
+}
+.warning .mono { color: var(--accent); }
+.warning p { font-style: italic; font-size: clamp(1.3rem, 2vw, 1.75rem); margin: 10px 0 0; line-height: 1.45; }
+
+/* ---------- theses ---------- */
+.thesis {
+  display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 0 64px;
+  padding: 110px var(--gut) 90px; border-top: 1px solid color-mix(in srgb, var(--line) 30%, transparent);
+}
+.side { position: sticky; top: 110px; align-self: start; padding-right: 32px; border-right: 2px solid color-mix(in srgb, var(--line) 70%, transparent); min-height: 300px; }
+.side .label { color: var(--muted); }
+.num { font-weight: 400; color: var(--accent); font-size: clamp(5rem, 9vw, 9rem); line-height: 1; margin: 16px 0 8px; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.ord { font-style: italic; font-size: 1.7rem; }
+.ord::after { content: ""; display: block; width: 64px; height: 2px; background: var(--accent); margin-top: 14px; }
+.topic { color: var(--muted); margin-top: 18px; line-height: 1.7; }
+.body { max-width: 68ch; }
+.body > p { margin: 0 0 .9em; font-size: clamp(1.25rem, 1.75vw, 1.6rem); line-height: 1.5; }
+.ch { transition: color .35s, background-size .5s; cursor: pointer; background-image: linear-gradient(var(--accent), var(--accent)); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 92%; }
+.ch:hover { color: var(--accent); }
+body.playing .ch { color: color-mix(in srgb, var(--ink) 38%, var(--paper)); }
+body.playing .ch.done { color: color-mix(in srgb, var(--ink) 70%, var(--paper)); }
+body.playing .ch.now { color: var(--ink); background-size: 100% 1px; }
+.nos { display: grid; gap: .25em; font-size: clamp(1.6rem, 2.7vw, 2.5rem) !important; line-height: 1.25 !important; margin: .4em 0 1em !important; }
+.nos .lead { font-style: italic; color: var(--muted); }
+.nos .no { display: block; padding-left: .9em; border-left: 2px solid var(--faint); }
+
+/* ---------- figures ---------- */
+.fig { margin: 2.6rem 0 0; padding: 30px 0 6px; border-top: 1px solid color-mix(in srgb, var(--line) 50%, transparent); }
+.fig + .fig { margin-top: 1.6rem; }
+.fig em { font-style: italic; }
+.fig-cap { color: var(--ink); margin-bottom: 22px; }
+.fig-note { color: var(--muted); font-style: italic; font-size: 1.15rem; max-width: 56ch; }
+.fig-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 22px; }
+.contra { display: flex; justify-content: center; gap: 22px; font-size: clamp(1.6rem, 2.6vw, 2.3rem); font-style: italic; }
+.contra s { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+.dotsep { color: var(--accent); }
+.tree { margin-top: 36px; }
+.tree-root { text-align: center; position: relative; padding-bottom: 22px; }
+.tree-root::after { content: ""; position: absolute; left: 50%; bottom: 0; height: 16px; width: 2px; background: var(--line); }
+.tree-branches { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+.tree-branches::before { content: ""; position: absolute; top: 0; left: 25%; right: 25%; height: 2px; background: var(--line); }
+.leaf { display: grid; justify-items: center; gap: 6px; text-align: center; padding-top: 24px; position: relative; }
+.leaf::before { content: ""; position: absolute; top: 0; left: calc(50% - 1px); width: 2px; height: 16px; background: var(--line); }
+.leaf em { font-size: clamp(1.5rem, 2.2vw, 2rem); }
+
+.track { position: relative; height: 70px; margin: 10px 4% 0; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 30px; height: 2px; background: var(--line); }
+.tick { position: absolute; top: 20px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.tick::before { content: ""; display: block; width: 2px; height: 22px; background: var(--line); margin: 0 auto 10px; }
+.tick.a { left: 12%; } .tick.b { left: 84%; }
+.obj { position: absolute; top: 22px; left: calc(12% - 8px); width: 18px; height: 18px; border-radius: 50%; background: var(--ink); transition: left 1.2s cubic-bezier(.6,0,.2,1); }
+.obj.at-b { left: calc(84% - 8px); }
+.segs { display: flex; gap: 6px; height: 6px; margin: 18px 4% 0; }
+.segs i { flex: 0 0 46px; background: var(--ink); animation: seg .5s ease both; }
+.segs i:last-child { background: var(--accent); }
+@keyframes seg { from { transform: scaleX(0); transform-origin: left; } to { transform: scaleX(1); } }
+
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 16px; }
+.bar-row span { text-align: right; }
+.bar { height: 20px; }
+.bar b { display: block; height: 100%; transition: width .35s cubic-bezier(.2,.7,.2,1); }
+.main .bar b { background: var(--accent); }
+.ghost .bar b { border: 1.5px solid var(--line); }
+input[type=range] { accent-color: var(--accent); width: min(320px, 60vw); }
+
+.chain { display: flex; justify-content: flex-end; align-items: baseline; gap: 14px; flex-wrap: wrap-reverse; font-style: italic; font-size: 1.6rem; min-height: 2.2em; }
+.chain .lnk { animation: pop .5s ease both; color: var(--muted); }
+.chain .lnk.now { color: var(--ink); }
+.chain .arr { color: var(--line); font-style: normal; }
+.chain .far { opacity: .45; font-size: 1.2rem; }
+@keyframes pop { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+.final-word { margin-top: 28px; text-align: center; font-style: italic; color: var(--accent); font-size: clamp(3rem, 6.5vw, 6rem); line-height: 1.05; }
+
+.attrs { margin: 0; display: grid; gap: 0; }
+.attrs > div { display: grid; grid-template-columns: minmax(170px, 260px) 1fr; gap: 24px; padding: 14px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 35%, transparent); align-items: baseline; transition: padding .3s; }
+.attrs > div:hover { padding-left: 14px; }
+.attrs dt { font-style: italic; font-size: 1.55rem; }
+.attrs > div:hover dt { color: var(--accent); }
+.attrs dd { margin: 0; color: var(--muted); font-size: 1.1rem; }
+
+.quad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.quad > div { padding: 6px 20px 10px; border-left: 2px solid var(--faint); display: grid; gap: 8px; align-content: start; transition: border-color .3s; }
+.quad > div:first-child { border-left-color: transparent; }
+.quad em { font-size: 1.6rem; overflow-wrap: anywhere; }
+.quad p { margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.4; }
+.quad > div:hover em { color: var(--accent); }
+.quad > div:hover { border-left-color: var(--accent); }
+
+.seg-switch { display: inline-flex; border: 1px solid var(--line); }
+.sw { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; padding: 9px 14px; background: transparent; border: 0; color: var(--muted); cursor: pointer; }
+.sw.on { background: var(--ink); color: var(--paper); }
+.scale { position: relative; height: 90px; margin: 10px 4% 0; }
+.scale::before { content: ""; position: absolute; left: 0; right: 0; bottom: 18px; height: 2px; background: var(--line); }
+.marker { position: absolute; bottom: 4px; width: 3px; height: 30px; background: var(--accent); transition: left 1.6s cubic-bezier(.6,0,.2,1); }
+.marker em { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; white-space: nowrap; }
+.scale-ends { display: flex; justify-content: space-between; margin: 6px 4% 0; color: var(--muted); }
+
+.pair { display: flex; justify-content: center; align-items: center; gap: 36px; flex-wrap: wrap; }
+.pair.big em { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.pair.struck { margin-bottom: 20px; color: var(--muted); }
+.pair.struck s { text-decoration-color: var(--line); }
+.vr { width: 2px; align-self: stretch; min-height: 60px; background: var(--faint); }
+.pair.cols { align-items: stretch; }
+.pair.cols > div { flex: 1 1 220px; display: grid; justify-items: center; align-content: start; gap: 8px; text-align: center; }
+.pair.cols em { font-size: clamp(1.6rem, 2.6vw, 2.3rem); }
+.pair.cols p { margin: 0; color: var(--muted); font-size: 1.05rem; max-width: 30ch; }
+.quote { margin: 34px auto 0; text-align: center; font-style: italic; font-size: clamp(1.5rem, 2.4vw, 2.1rem); max-width: 28ch; }
+.tags { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 40px; counter-reset: t; }
+.tags li { font-style: italic; font-size: 1.45rem; counter-increment: t; }
+.tags li::before { content: counter(t, decimal-leading-zero); font-family: var(--mono); font-style: normal; font-size: 11px; color: var(--accent); margin-right: 14px; letter-spacing: .1em; }
+.rule-top { border-top: 2px solid var(--accent); padding-top: 12px; margin: 26px 8% 0; }
+
+/* ---------- colophon ---------- */
+footer { padding: 140px var(--gut) 80px; border-top: 1px solid color-mix(in srgb, var(--line) 30%, transparent); }
+.colo { display: grid; grid-template-columns: repeat(13, 1fr); height: 160px; max-width: 900px; }
+.colo i { width: 2px; background: var(--line); }
+.colo i:last-child { width: 3px; background: var(--accent); height: 150%; }
+footer h2 { font-weight: 500; font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: 1; margin: 56px 0 18px; text-wrap: balance; }
+footer .author { margin-top: 30px; }
+
+@media (max-width: 900px) {
+  header.bar { grid-template-columns: 1fr auto; height: auto; padding-top: 10px; padding-bottom: 10px; row-gap: 8px; }
+  .brand { display: none; }
+  .ruler { grid-column: 1 / -1; grid-row: 2; }
+  .ruler a { width: auto; }
+  .follow { display: none; }
+  .thesis { grid-template-columns: 1fr; padding-top: 80px; }
+  .side { position: static; border-right: 0; border-bottom: 2px solid color-mix(in srgb, var(--line) 70%, transparent); min-height: 0; padding: 0 0 18px; margin-bottom: 28px; display: grid; grid-template-columns: auto 1fr; column-gap: 22px; align-items: end; }
+  .side .label, .side .topic { grid-column: 1 / -1; }
+  .num { margin: 8px 0 0; font-size: 4.6rem; }
+  .quad { grid-template-columns: 1fr 1fr; row-gap: 20px; }
+  .attrs > div { grid-template-columns: 1fr; gap: 4px; }
+  .tags { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr auto; column-gap: 16px; }
+  .hl span { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<header class="bar" id="bar">
+  <a class="brand mono" href="#top">Манифест рационалиста</a>
+  <nav class="ruler" id="ruler" aria-label="Положения"><a href="#t1" data-i="1" title="I. Разум"><span>I</span></a><a href="#t2" data-i="2" title="II. Начальность вселенной"><span>II</span></a><a href="#t3" data-i="3" title="III. Основание всех оснований"><span>III</span></a><a href="#t4" data-i="4" title="IV. Безначальность и единственность"><span>IV</span></a><a href="#t5" data-i="5" title="V. Могущество, воля, знание, жизнь"><span>V</span></a><a href="#t6" data-i="6" title="VI. Способность"><span>VI</span></a><a href="#t7" data-i="7" title="VII. Без целей и мотивов"><span>VII</span></a><a href="#t8" data-i="8" title="VIII. Относительность морали"><span>VIII</span></a><a href="#t9" data-i="9" title="IX. Справедливость и благосклонность"><span>IX</span></a><a href="#t10" data-i="10" title="X. Пророчество"><span>X</span></a><a href="#t11" data-i="11" title="XI. Коран и чудеса"><span>XI</span></a><a href="#t12" data-i="12" title="XII. Откровение"><span>XII</span></a><a href="#t13" data-i="13" title="XIII. Истина и закон"><span>XIII</span></a></nav>
+  <div class="player">
+    <label class="follow" for="follow"><input type="checkbox" id="follow" checked> следовать</label>
+    <span class="time" id="time">0:00 / 8:08</span>
+    <button type="button" class="btn play" id="play" aria-pressed="false">Слушать</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Обложка">
+    <nav class="hero-lines" aria-label="Положения I–XII"><a class="hl" href="#t1" style="--i:0" data-t="I · Разум"><span class="mono">I</span></a><a class="hl" href="#t2" style="--i:1" data-t="II · Начальность вселенной"><span class="mono">II</span></a><a class="hl" href="#t3" style="--i:2" data-t="III · Основание всех оснований"><span class="mono">III</span></a><a class="hl thick" href="#t4" style="--i:3" data-t="IV · Безначальность и единственность"><span class="mono">IV</span></a><a class="hl" href="#t5" style="--i:4" data-t="V · Могущество, воля, знание, жизнь"><span class="mono">V</span></a><a class="hl" href="#t6" style="--i:5" data-t="VI · Способность"><span class="mono">VI</span></a><a class="hl" href="#t7" style="--i:6" data-t="VII · Без целей и мотивов"><span class="mono">VII</span></a><a class="hl thick" href="#t8" style="--i:7" data-t="VIII · Относительность морали"><span class="mono">VIII</span></a><a class="hl" href="#t9" style="--i:8" data-t="IX · Справедливость и благосклонность"><span class="mono">IX</span></a><a class="hl" href="#t10" style="--i:9" data-t="X · Пророчество"><span class="mono">X</span></a><a class="hl" href="#t11" style="--i:10" data-t="XI · Коран и чудеса"><span class="mono">XI</span></a><a class="hl thick" href="#t12" style="--i:11" data-t="XII · Откровение"><span class="mono">XII</span></a></nav>
+    <a class="xiii hl-xiii" href="#t13" data-t="XIII · Истина и закон"><span class="mono">XIII</span></a>
+    <h1 class="hero-title"><span class="ch" data-s="0.0" data-e="2.04">Манифест рационалиста</span></h1>
+    <div class="hero-caption mono" id="caption" aria-live="polite">Тринадцать положений · выберите линию</div>
+    <div class="author">
+      <em>Абу Хафс аш-Шафии</em>
+      <button type="button" class="btn" id="play2">Слушать манифест · 8:08</button>
+    </div>
+  </section>
+
+  <section class="preface" aria-label="Вступление">
+    <p><span class="ch" data-s="2.04" data-e="8.64">Хвала Аллаху, именем которого создается материя, а затем преображается духом истины.</span></p>
+    <p><span class="ch" data-s="8.64" data-e="21.36">Мир Его и благословение господину рационалистов и идеалу познавших – Мухаммаду, его мудрейшему семейству и проницательным сподвижникам, а также тем, кто проникнулся его светом.</span></p>
+    <div class="rule-mini"></div>
+    <p class="sum"><span class="ch" data-s="21.36" data-e="28.36">Это – краткое изложение основ мировоззрения, открывающее двери к искомому спасению.</span></p>
+  </section>
+
+  <div style="display:grid">
+    <aside class="warning">
+      <div class="mono">Внимание</div>
+      <p>Данный манифест рассчитан на подготовленного слушателя. Без базовых знаний в рациональных науках часть его положений может остаться неясной.</p>
+    </aside>
+  </div>
+
+  
+<section class="thesis" id="t1" data-i="1">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">I</div>
+    <div class="ord">Первое</div>
+    <div class="mono small topic">Разум</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="28.36" data-e="37.05">Суждения разума неизбежны, а суждение об обратном – безумие, поскольку не бывает суждения, кроме как исходящего из разума.</span></p><p><span class="ch" data-s="37.05" data-e="51.44">Аннулирование разума разумом приводит к аннулированию его аннулирования, при котором нарушается закон непротиворечия, где разум оказывается одновременно дееспособным и недееспособным, абсурдность чего познается априорно.</span></p><p><span class="ch" data-s="51.44" data-e="61.18">Всякое суждение есть продукт либо априорного – не нуждающегося в предварительном анализе, как суждение об абсурдности сосуществования взаимоисключающего,</span></p><p><span class="ch" data-s="61.18" data-e="67.93">либо приобретенного – полученного оперированием априорным, как суждение о начальности вселенной.</span></p>
+    
+<figure class="fig" aria-label="Схема: виды суждений">
+  <div class="fig-cap mono">Аннулирование разума разумом</div>
+  <div class="contra"><s>дееспособен</s><span class="dotsep">·</span><s>недееспособен</s></div>
+  <div class="mono small accent center">одновременно — абсурдно</div>
+  <div class="tree">
+    <div class="tree-root mono">суждение</div>
+    <div class="tree-branches">
+      <div class="leaf"><em>априорное</em><span class="mono small">без предварительного анализа</span><span class="mono small accent">A и не-A несовместимы</span></div>
+      <div class="leaf"><em>приобретённое</em><span class="mono small">оперирование априорным</span><span class="mono small accent">начальность вселенной</span></div>
+    </div>
+  </div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t2" data-i="2">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">II</div>
+    <div class="ord">Второе</div>
+    <div class="mono small topic">Начальность вселенной</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="67.93" data-e="76.57">Вселенная начальна, поскольку не избавлена от двух явных признаков начального – изменяемости и ограниченности.</span></p><p><span class="ch" data-s="76.57" data-e="88.73">Изменяемостью обозначают появление у объекта того, чему предшествовало его отсутствие, как движение, которому предшествовал покой, или положение В, которому предшествовало положение А.</span></p><p><span class="ch" data-s="88.73" data-e="97.12">Все, что поддается изменению, является начальным, поскольку состоит из конечных отрезков бытия, исчисляемых его изменяемостью,</span></p><p><span class="ch" data-s="97.12" data-e="107.6">а в противном случае возникла бы бесконечно прошлая цепь изменений, которая по определению не может быть устремлена к настоящему, которым утверждается их конечность.</span></p><p><span class="ch" data-s="107.6" data-e="113.75">Ограниченностью обозначают размер объекта, в отношении которого допустим больший или меньший размер.</span></p><p><span class="ch" data-s="113.75" data-e="130.0">Для бытия вселенной, обладающей определенным размером (N), который служит условием ее существования, должно иметься достаточное основание, поскольку этот размер безусловно допускает для себя (N+1) и (N−1).</span></p><p><span class="ch" data-s="130.0" data-e="133.94">Данное основание представляет собой либо саму вселенную, либо что-то иное.</span></p><p><span class="ch" data-s="133.94" data-e="141.86">Первое предполагает опережение вселенной самой себя, абсурдность чего познается априорно. Остается второе.</span></p>
+    
+<figure class="fig" aria-label="Изменяемость: объект переходит из A в B">
+  <div class="fig-cap mono">Изменяемость</div>
+  <div class="track" id="track"><span class="tick a">A</span><span class="tick b">B</span><span class="obj" id="obj"></span></div>
+  <div class="segs" id="segs" aria-label="Отрезки бытия"><i></i><i></i><i></i></div>
+  <div class="fig-row">
+    <button type="button" id="btn-move" class="btn">Изменить положение</button>
+    <span class="mono small" id="seg-count">отрезков бытия: 3 — конечное число</span>
+  </div>
+  <p class="fig-note">Каждое изменение отмеряет конечный отрезок. Цепь отрезков, уходящая в бесконечное прошлое, не дошла бы до настоящего.</p>
+</figure>
+<figure class="fig" aria-label="Ограниченность: размер N">
+  <div class="fig-cap mono">Ограниченность</div>
+  <div class="bars">
+    <div class="bar-row ghost"><span class="mono small">N − 1</span><div class="bar"><b id="bm"></b></div></div>
+    <div class="bar-row main"><span class="mono small accent">N</span><div class="bar"><b id="bn"></b></div></div>
+    <div class="bar-row ghost"><span class="mono small">N + 1</span><div class="bar"><b id="bp"></b></div></div>
+  </div>
+  <div class="fig-row">
+    <label for="size" class="mono small">размер вселенной</label>
+    <input type="range" id="size" min="20" max="90" value="60">
+    <output id="size-out" class="mono small accent">N = 60</output>
+  </div>
+  <p class="fig-note">Какой бы размер ни был выбран, допустимы и N + 1, и N − 1. Значит, для именно этого размера нужно достаточное основание.</p>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t3" data-i="3">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">III</div>
+    <div class="ord">Третье</div>
+    <div class="mono small topic">Основание всех оснований</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="141.86" data-e="150.67">Основание вселенной, определяющее ее размер (N), либо также имеет основание для своего существования, либо нет.</span></p><p><span class="ch" data-s="150.67" data-e="157.83">Первое влечет бесконечно прошлую цепь оснований, абсурдность которой утверждается замыкающим ее настоящим.</span></p><p><span class="ch" data-s="157.83" data-e="170.0">Второе невозможно, если допустить для данного основания то, что обусловливает потребность вселенной в основании, – а это изменяемость и ограниченность, – и непреложно, если таковое у него отсутствует.</span></p><p><span class="ch" data-s="170.0" data-e="176.46">Основание всех оснований (первопричину) мы именуем проявлением божественной воли.</span></p>
+    
+<figure class="fig" aria-label="Цепь оснований">
+  <div class="fig-cap mono">Цепь оснований</div>
+  <div class="chain" id="chain"><span class="lnk">основание</span><span class="arr">←</span><span class="lnk now">вселенная</span></div>
+  <div class="fig-row">
+    <button type="button" id="btn-ground" class="btn">Добавить основание</button>
+    <button type="button" id="btn-reset" class="btn ghost-btn">Сначала</button>
+  </div>
+  <p class="fig-note" id="chain-note">Если у каждого основания есть своё основание, цепь уходит в бесконечное прошлое и не может замкнуться настоящим.</p>
+  <div class="final-word">Первопричина</div>
+  <div class="mono small center">основание всех оснований</div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t4" data-i="4">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">IV</div>
+    <div class="ord">Четвертое</div>
+    <div class="mono small topic">Безначальность и единственность</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="176.46" data-e="195.88">Божественное не описывается изменяемостью и ограниченностью, поскольку эти параметры есть особенность того, что требует основания для своего существования, чем утверждаются безначальность Божественного и Его бесконечность, самодостаточность, бесподобность и единственность:</span></p><p><span class="ch" data-s="195.88" data-e="200.52">безначальность – из-за абсурдности бесконечно прошлой цепи оснований;</span></p><p><span class="ch" data-s="200.52" data-e="206.09">бесконечность и самодостаточность – из-за отсутствия основания для Его существования;</span></p><p><span class="ch" data-s="206.09" data-e="213.98">бесподобность – из-за невозможности того, чтобы для Него было справедливо то, что справедливо для Его следствия – вселенной;</span></p><p><span class="ch" data-s="213.98" data-e="220.88">единственность – из-за абсурдности происхождения одного и того же следствия от двух разных оснований.</span></p>
+    
+<figure class="fig" aria-label="Атрибуты">
+  <div class="fig-cap mono">Божественное</div>
+  <dl class="attrs">
+    <div><dt>безначальность</dt><dd>бесконечно прошлая цепь оснований абсурдна</dd></div>
+    <div><dt>бесконечность</dt><dd>у Его существования нет основания</dd></div>
+    <div><dt>самодостаточность</dt><dd>у Его существования нет основания</dd></div>
+    <div><dt>бесподобность</dt><dd>к Нему неприменимо то, что применимо к следствию</dd></div>
+    <div><dt>единственность</dt><dd>одно следствие не происходит от двух оснований</dd></div>
+  </dl>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t5" data-i="5">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">V</div>
+    <div class="ord">Пятое</div>
+    <div class="mono small topic">Могущество, воля, знание, жизнь</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="220.88" data-e="230.54">Наличие начальной вселенной – т. е. следствия первопричины – устанавливает могущество, волю, знание и жизнь Божественного:</span></p><p><span class="ch" data-s="230.54" data-e="234.48">могущество – из-за реализации прежде несуществующего;</span></p><p><span class="ch" data-s="234.48" data-e="242.83">волю – из-за выбора между равнозначными для вселенной возможностями – ее существованием и продолжающимся несуществованием;</span></p><p><span class="ch" data-s="242.83" data-e="246.34">знание – из-за невозможности выбора непознанного;</span></p><p><span class="ch" data-s="246.34" data-e="251.36">жизнь – из-за наличия данных свойств, немыслимых иначе как у живого.</span></p>
+    
+<figure class="fig" aria-label="Четыре атрибута">
+  <div class="fig-cap mono">Из наличия начальной вселенной</div>
+  <div class="quad">
+    <div><span class="mono small">01</span><em>могущество</em><p>реализация прежде несуществующего</p></div>
+    <div><span class="mono small">02</span><em>воля</em><p>выбор между существованием и несуществованием</p></div>
+    <div><span class="mono small">03</span><em>знание</em><p>непознанное нельзя выбрать</p></div>
+    <div><span class="mono small">04</span><em>жизнь</em><p>эти свойства немыслимы иначе как у живого</p></div>
+  </div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t6" data-i="6">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">VI</div>
+    <div class="ord">Шестое</div>
+    <div class="mono small topic">Способность</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="251.36" data-e="266.69">Бог способен на все возможное – а это все, что не противоречит Его божественности (противоречие чему сводится к начальности и ограниченности), – как, например, создание вселенной, подчиняющейся назначенной Им системе.</span></p>
+    
+  </div>
+</section>
+<section class="thesis" id="t7" data-i="7">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">VII</div>
+    <div class="ord">Седьмое</div>
+    <div class="mono small topic">Без целей и мотивов</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="266.69" data-e="279.11">Бог не имеет целей и мотивов и является единственным источником всего полезного и вредного, поскольку обратное ограничивает Его волю и утверждает Его принужденность.</span></p>
+    
+  </div>
+</section>
+<section class="thesis" id="t8" data-i="8">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">VIII</div>
+    <div class="ord">Восьмое</div>
+    <div class="mono small topic">Относительность морали</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="279.11" data-e="300.37">Мораль относительна, поскольку сводится к интересам, варьирующимся от одних психофизиологических лиц к другим, а иначе было бы необходимо, чтобы поступки всегда имели один и тот же моральный статус, как порочность лжи или убийства, абсолютность которой нарушается, когда ими достигается примирение.</span></p>
+    
+<figure class="fig" aria-label="Шкала морального статуса">
+  <div class="fig-cap mono">Моральный статус поступка</div>
+  <div class="seg-switch" role="group" aria-label="Обстоятельство">
+    <button type="button" class="sw on" data-pos="12" id="sw-usual">обычный случай</button>
+    <button type="button" class="sw" data-pos="88" id="sw-recon">ради примирения</button>
+  </div>
+  <div class="scale"><div class="marker" id="marker" style="left:12%"><em>ложь</em></div></div>
+  <div class="scale-ends mono small"><span>порочно</span><span>допустимо</span></div>
+  <p class="fig-note">Если бы порочность лжи была абсолютной, её статус не менялся бы. Но он меняется, когда ложью достигается примирение.</p>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t9" data-i="9">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">IX</div>
+    <div class="ord">Девятое</div>
+    <div class="mono small topic">Справедливость и благосклонность</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="300.37" data-e="311.22">Отсюда все поступки и решения Бога не могут характеризоваться как моральные или аморальные, а, напротив, варьируются между Его справедливостью и благосклонностью.</span></p>
+    
+<figure class="fig" aria-label="Справедливость и благосклонность">
+  <div class="pair struck mono small"><s>моральное</s><s>аморальное</s></div>
+  <div class="pair big"><em class="accent">справедливость</em><span class="vr"></span><em class="accent">благосклонность</em></div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t10" data-i="10">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">X</div>
+    <div class="ord">Десятое</div>
+    <div class="mono small topic">Пророчество</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="311.22" data-e="320.12">Наличие пророков – из возможного, ибо нет разницы между созданием человека и созданием человека с особенностью,</span></p><p><span class="ch" data-s="320.12" data-e="326.0">и оно – из случившегося, поскольку исторически зафиксировано и аналитически познано.</span></p><p><span class="ch" data-s="326.0" data-e="342.45">Что касается того, что это исторически зафиксировано, то это в соответствии с многочисленными непрерывными свидетельствами различных народов об объявлении Мухаммадом (ﷺ) своего пророчества, сопряженном с феноменальными явлениями.</span></p><p><span class="ch" data-s="342.45" data-e="353.56">А что касается того, что это аналитически познано, то это постольку, поскольку явление феноменального, сопряженного с пророчеством, не может происходить по прихоти обычного человека;</span></p><p><span class="ch" data-s="353.56" data-e="364.84">или потому, что им утверждается необычность этого человека, а это формализует собой обращение его Отправителя: «Правдив пророк, которого Я отправил к вам».</span></p><p><span class="ch" data-s="364.84" data-e="375.61">Нельзя возразить: «Это событие утверждает его гениальность, и не более», ведь в противном случае следует невозможность отправления Богом пророков, а это абсурдно;</span></p><p><span class="ch" data-s="375.61" data-e="381.98">также потому, что событие формализует заверение, а заверение без заверяемого немыслимо.</span></p>
+    
+<figure class="fig" aria-label="Два пути познания пророчества">
+  <div class="pair cols">
+    <div><span class="mono small accent">исторически</span><em>зафиксировано</em><p>многочисленные непрерывные свидетельства разных народов</p></div>
+    <span class="vr"></span>
+    <div><span class="mono small accent">аналитически</span><em>познано</em><p>феноменальное не происходит по прихоти обычного человека</p></div>
+  </div>
+  <blockquote class="quote">«Правдив пророк, которого Я отправил к вам»</blockquote>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t11" data-i="11">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">XI</div>
+    <div class="ord">Одиннадцатое</div>
+    <div class="mono small topic">Коран и чудеса</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="381.98" data-e="394.32">Из феноменальностей, явленных Пророком (ﷺ) – Коран, которым был брошен вызов всем ораторам и поэтам и на который до сих пор не дан ответ,</span></p><p><span class="ch" data-s="394.32" data-e="406.98">– из-за его превосходства над человеческой манерой выражения, которое отражается в запредельной лаконичности, сочетающейся со специфической мелодичностью, что выходит за рамки естественной речи – прозы и поэзии;</span></p><p><span class="ch" data-s="406.98" data-e="423.37">а также из-за его уникальной содержательности, выражающейся множественностью наук, многочисленностью точно сбывшихся немыслимых пророчеств, отсутствием малейшего противоречия при его объемности и максимально точным соответствием глубоким рациональным вопросам.</span></p><p><span class="ch" data-s="423.37" data-e="438.29">Также из тех феноменальностей – его частое нарушение естественных законов, передаваемое очевидцами из числа его сподвижников и противников, одни из которых вскоре последовали за ним, а другие остались во вражде, не оспаривая этого.</span></p>
+    
+<figure class="fig" aria-label="Феноменальность Корана">
+  <div class="fig-cap mono">Превосходство над человеческой речью</div>
+  <div class="pair big"><em class="accent">лаконичность</em><span class="vr"></span><em class="accent">мелодичность</em></div>
+  <div class="mono small center">за рамками прозы и поэзии</div>
+  <div class="fig-cap mono" style="margin-top:2.2rem">Уникальная содержательность</div>
+  <ol class="tags"><li>множественность наук</li><li>сбывшиеся пророчества</li><li>непротиворечивость</li><li>соответствие рациональным вопросам</li></ol>
+  <div class="fig-cap mono" style="margin-top:2.2rem">Очевидцы нарушения естественных законов</div>
+  <div class="pair cols">
+    <div><em>сподвижники</em></div><span class="vr"></span>
+    <div><em>противники</em><p>одни последовали за ним, другие остались во вражде</p></div>
+  </div>
+  <div class="mono small accent center rule-top">никто не оспаривал</div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t12" data-i="12">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">XII</div>
+    <div class="ord">Двенадцатое</div>
+    <div class="mono small topic">Откровение</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="438.29" data-e="455.67">Откровением предписывается признание исключительной божественности Создателя при правильном представлении о Нем и беспрекословное следование Его руководству, за исполнение чего полагается вечное блаженство, а за нарушение – нескончаемое страдание.</span></p>
+    
+<figure class="fig" aria-label="Два исхода">
+  <div class="pair cols">
+    <div><span class="mono small">исполнение</span><em class="accent">вечное блаженство</em></div>
+    <span class="vr"></span>
+    <div><span class="mono small">нарушение</span><em class="bordo">нескончаемое страдание</em></div>
+  </div>
+</figure>
+  </div>
+</section>
+<section class="thesis" id="t13" data-i="13">
+  <aside class="side">
+    <div class="mono label">положение</div>
+    <div class="num">XIII</div>
+    <div class="ord">Тринадцатое</div>
+    <div class="mono small topic">Истина и закон</div>
+  </aside>
+  <div class="body">
+    <p><span class="ch" data-s="455.67" data-e="464.92">Все, что сообщено Откровением, – безусловная истина, и все учрежденные им законы – непреложное обязательство.</span></p><p class="nos ch" data-s="464.92" data-e="479.04"><span class="lead">Отсюда:</span><span class="no">нет закона, кроме закона Бога;</span><span class="no">нет морали, кроме той, что Он установил;</span><span class="no">нет исхода, кроме того, что Он определил;</span><span class="no">и нет спасения, кроме того, на которое Он указал.</span></p><p><span class="ch" data-s="479.04" data-e="488.31">Сомнение в чем-либо из этого есть непоследовательность, а его интерпретация есть тщетное искажение, аннулирующее прежде признанное.</span></p>
+    
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="colo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <h2>Манифест рационалиста</h2>
+  <div class="author">
+    <em>Абу Хафс аш-Шафии</em>
+    <span class="mono" style="color:var(--muted)">Субстрат интеллекта</span>
+  </div>
+</footer>
+
+<audio id="audio" src="narration.mp3" preload="metadata"></audio>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  // hero caption
+  const cap = $('#caption'), capDefault = cap.textContent;
+  $$('.hl, .xiii').forEach(a => {
+    const show = () => cap.textContent = a.dataset.t;
+    a.addEventListener('mouseenter', show); a.addEventListener('focus', show);
+    a.addEventListener('mouseleave', () => cap.textContent = capDefault);
+    a.addEventListener('blur', () => cap.textContent = capDefault);
+  });
+
+  // top bar + ruler state
+  const bar = $('#bar'), hero = $('.hero');
+  const rl = $$('#ruler a'), theses = $$('.thesis');
+  let current = 0;
+  function setCur(i) {
+    current = i;
+    rl.forEach(a => { const k = +a.dataset.i; a.classList.toggle('cur', k === i); a.classList.toggle('past', k < i); });
+  }
+  function onScroll() {
+    bar.classList.toggle('show', hero.getBoundingClientRect().bottom < 80 || !audio.paused);
+    let i = 0;
+    for (const t of theses) if (t.getBoundingClientRect().top < innerHeight * .45) i = +t.dataset.i;
+    if (i !== current) setCur(i);
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+
+  // audio sync
+  const audio = $('#audio'), play = $('#play'), play2 = $('#play2'), time = $('#time'), follow = $('#follow');
+  const chunks = $$('.ch').map(el => ({ el, s: +el.dataset.s, e: +el.dataset.e })).sort((a, b) => a.s - b.s);
+  let nowIdx = -1, userScrollAt = 0;
+  const fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  function togglePlay() {
+    if (audio.paused) {
+      const p = audio.play(); if (p && p.catch) p.catch(() => { time.textContent = 'звук недоступен'; });
+    } else audio.pause();
+  }
+  play.addEventListener('click', togglePlay);
+  play2.addEventListener('click', togglePlay);
+  audio.addEventListener('play', () => { document.body.classList.add('playing'); play.classList.add('on'); play.textContent = 'Пауза'; play.setAttribute('aria-pressed', 'true'); play2.textContent = 'Пауза'; onScroll(); });
+  audio.addEventListener('pause', () => { play.classList.remove('on'); play.textContent = 'Слушать'; play.setAttribute('aria-pressed', 'false'); play2.textContent = 'Продолжить'; });
+  audio.addEventListener('ended', () => { document.body.classList.remove('playing'); });
+  ['wheel', 'touchmove', 'keydown'].forEach(ev => addEventListener(ev, () => userScrollAt = Date.now(), { passive: true }));
+  audio.addEventListener('timeupdate', () => {
+    const t = audio.currentTime;
+    time.textContent = `${fmt(t)} / ${fmt(audio.duration || 488)}`;
+    let idx = -1;
+    for (let i = 0; i < chunks.length; i++) if (t >= chunks[i].s) idx = i;
+    if (idx === nowIdx) return;
+    nowIdx = idx;
+    chunks.forEach((c, i) => { c.el.classList.toggle('now', i === idx); c.el.classList.toggle('done', i < idx); });
+    if (idx >= 0 && follow.checked && Date.now() - userScrollAt > 4000) {
+      chunks[idx].el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+  });
+  chunks.forEach(c => c.el.addEventListener('click', () => {
+    audio.currentTime = c.s + 0.01; userScrollAt = 0;
+    if (audio.paused) togglePlay();
+  }));
+
+  // II — change
+  const obj = $('#obj'), segs = $('#segs'), segCount = $('#seg-count');
+  if (obj) $('#btn-move').addEventListener('click', () => {
+    obj.classList.toggle('at-b');
+    if (segs.children.length >= 12) segs.innerHTML = '';
+    segs.appendChild(document.createElement('i'));
+    segCount.textContent = `отрезков бытия: ${segs.children.length} — конечное число`;
+  });
+  // II — size
+  const size = $('#size');
+  function sz() {
+    const n = +size.value;
+    $('#bn').style.width = n + '%'; $('#bm').style.width = (n - 9) + '%'; $('#bp').style.width = (n + 9) + '%';
+    $('#size-out').textContent = 'N = ' + n;
+  }
+  if (size) { size.addEventListener('input', sz); sz(); }
+
+  // III — regress
+  const chain = $('#chain'), note = $('#chain-note'), noteDefault = note ? note.textContent : '';
+  let grounds = 1;
+  if (chain) {
+    $('#btn-ground').addEventListener('click', () => {
+      grounds++;
+      const arr = document.createElement('span'); arr.className = 'arr'; arr.textContent = '←';
+      const l = document.createElement('span'); l.className = 'lnk'; l.textContent = 'основание';
+      chain.prepend(arr); chain.prepend(l);
+      if (grounds > 4) chain.querySelectorAll('.lnk').forEach((x, i) => x.classList.toggle('far', i < grounds - 4));
+      note.textContent = grounds < 5
+        ? `Оснований в цепи: ${grounds}. У каждого снова спрашиваем: что его основание?`
+        : `Оснований в цепи: ${grounds}. Так цепь никогда не завершится, а настоящее существует. Значит, есть основание, которое само в основании не нуждается.`;
+    });
+    $('#btn-reset').addEventListener('click', () => {
+      grounds = 1;
+      chain.innerHTML = '<span class="lnk">основание</span><span class="arr">←</span><span class="lnk now">вселенная</span>';
+      note.textContent = noteDefault;
+    });
+  }
+
+  // VIII — morality scale
+  const marker = $('#marker');
+  $$('.sw').forEach(b => b.addEventListener('click', () => {
+    $$('.sw').forEach(x => x.classList.toggle('on', x === b));
+    marker.style.left = b.dataset.pos + '%';
+  }));
+
+  onScroll();
+})();
+</script>
+</body>
+</html>
